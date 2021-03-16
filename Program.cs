@@ -8,6 +8,8 @@ namespace Example_project
         {
             ExcelExample example = new ExcelExample();
 
+            Console.WriteLine("Processing document, please wait...");
+
             // Create a new instance of the delegate and reference the desired functions
             ExcelExample.ExcelExampleHandler exampleHandler = example.PopulateCells;
             exampleHandler += example.ApplyCustomStyle;
@@ -17,6 +19,8 @@ namespace Example_project
 
             // Run the functions referenced by the delegate
             example.RunExample(exampleHandler);
+
+            Console.WriteLine("Done!");
         }
     }
 }

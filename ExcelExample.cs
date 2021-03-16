@@ -47,7 +47,7 @@ namespace Example_project
                 for (int j = 0; j < _range.ColumnCount; j++)
                 {
                     // Populate the cells with incrementing values with random noise
-                    _range[i, j].Value = i + random.Next(-50, 50) / 100;
+                    _range[i, j].Value = i + (float)random.Next(-50, 50) / 100.0;
                 }
             }
         }
@@ -85,6 +85,7 @@ namespace Example_project
         public void CreateChart()
         {
             Chart chart = _worksheet.Charts.Add(ChartType.ScatterLineMarkers);
+            chart.Title.SetValue("Example chart with trendline");
             chart.TopLeftCell = _worksheet.Cells["D1"];
             chart.BottomRightCell = _worksheet.Cells["K14"];
             chart.Series.Add(

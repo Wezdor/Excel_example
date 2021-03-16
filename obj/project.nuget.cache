@@ -1,17 +1,9 @@
 {
   "version": 2,
-  "dgSpecHash": "XlF+RS2uJBvJpksTGm3hOlu5Lc9Azrm3/Sey4gajo4Pk8fBBKHy4IN/MgeyzH/A7o2gLPgkAlChJsppT7tVCwg==",
+  "dgSpecHash": "GLRDeGtp5pvE2ZB+VGSXWwScRiZukA9x4GeyyINT6FiAQDmLCDBnVSEVWenyWqsuSTnDgqrNgyttUqreo3EMlQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Wezdor\\source\\repos\\Example_solution\\Example_project\\Example_project.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Wezdor\\.nuget\\packages\\microsoft.netcore.app\\2.1.0\\microsoft.netcore.app.2.1.0.nupkg.sha512",
-    "C:\\Users\\Wezdor\\.nuget\\packages\\microsoft.netcore.dotnetapphost\\2.1.0\\microsoft.netcore.dotnetapphost.2.1.0.nupkg.sha512",
-    "C:\\Users\\Wezdor\\.nuget\\packages\\microsoft.netcore.dotnethostpolicy\\2.1.0\\microsoft.netcore.dotnethostpolicy.2.1.0.nupkg.sha512",
-    "C:\\Users\\Wezdor\\.nuget\\packages\\microsoft.netcore.dotnethostresolver\\2.1.0\\microsoft.netcore.dotnethostresolver.2.1.0.nupkg.sha512",
-    "C:\\Users\\Wezdor\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.1\\microsoft.netcore.platforms.5.0.1.nupkg.sha512",
-    "C:\\Users\\Wezdor\\.nuget\\packages\\microsoft.netcore.targets\\2.1.0\\microsoft.netcore.targets.2.1.0.nupkg.sha512",
-    "C:\\Users\\Wezdor\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
-    "C:\\Users\\Wezdor\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
     "C:\\Users\\Wezdor\\.nuget\\packages\\system.drawing.common\\5.0.2\\system.drawing.common.5.0.2.nupkg.sha512",
     "C:\\Users\\Wezdor\\.nuget\\packages\\system.security.accesscontrol\\5.0.0\\system.security.accesscontrol.5.0.0.nupkg.sha512",
     "C:\\Users\\Wezdor\\.nuget\\packages\\system.security.permissions\\5.0.0\\system.security.permissions.5.0.0.nupkg.sha512",
