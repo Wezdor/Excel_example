@@ -2,6 +2,8 @@
 using DevExpress.Spreadsheet.Charts;
 using System;
 using System.Drawing;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Example_project
 {
@@ -19,9 +21,15 @@ namespace Example_project
         private Workbook _workbook;
         private Worksheet _worksheet;
         private CellRange _range;
+        private Cell _dateCell;
         private string _fileName;
+        private Color _customColor;
+        private DateTime _date;
 
-        public delegate void ExcelExampleHandler();
+        private Random _random = new Random(DateTime.Now.Millisecond);
+
+        public delegate void ExcelExampleOperationHandler();
+        public delegate Task ExcelExampleAsyncHandler();
 
         public ExcelExample()
         {
@@ -30,24 +38,53 @@ namespace Example_project
             _worksheet = _workbook.Worksheets["Excel sample"];
             _range = _worksheet.Range["A1:A12"];
             _fileName = "Test";
+            _customColor = Color.White;
+            _dateCell = _worksheet.Cells["D1"];
+            _date = DateTime.Today;
         }
 
-        public void RunExample(ExcelExampleHandler exampleHandler)
+        // Public attributes
+        public Color CustomColor
+        {
+            get { return _customColor; }
+            set { _customColor = value; }
+        }
+        public string RangeReference
+        {
+            get { return _range.GetReferenceA1(); }
+            set { _range = _worksheet.Range[value]; }
+        }
+        public string DateCellReference
+        {
+            get { return _dateCell.GetReferenceA1(); }
+            set { _dateCell = _worksheet.Cells[value]; }
+        }
+        public DateTime Date
+        {
+            get { return _date; }
+            set { _date = value; }
+        }
+
+
+        public void RunExample(ExcelExampleOperationHandler exampleHandler)
         {
             exampleHandler();
+        }
+
+        public async Task SaveExampleAsync(ExcelExampleAsyncHandler asyncHandler)
+        {
+            await asyncHandler();
         }
 
         // Populate the selected range with random data
         public void PopulateCells()
         {
-            Random random = new Random();
-
-            for (int i = 0; i < _range.RowCount; i++ )
+            for (int i = 0; i < _range.RowCount; i++)
             {
                 for (int j = 0; j < _range.ColumnCount; j++)
                 {
                     // Populate the cells with incrementing values with random noise
-                    _range[i, j].Value = i + (float)random.Next(-50, 50) / 100.0;
+                    _range[i, j].Value = i + j * 10 + (float)_random.Next(-50, 50) / 100.0;
                 }
             }
         }
@@ -55,8 +92,15 @@ namespace Example_project
         // Create a custom style and apply it to the selected Range
         public void ApplyCustomStyle()
         {
+            string styleName = "SOL-IT";
+            
+            // Check that style doesn't already exist
+            // For the purpose of this example we just append a random int to the style name, because deleting it is not an option
+            if (_workbook.Styles.Contains(styleName)) styleName += _random.Next().ToString();
+            // Check again, in case we got the same random int twice...
+            if (_workbook.Styles.Contains(styleName)) styleName += _random.Next().ToString();
             // Add a new style under the "SOL-IT" name to the style collection.
-            Style customStyle = _workbook.Styles.Add("SOL-IT");
+            Style customStyle = _workbook.Styles.Add(styleName);
 
             // Copy all format settings from the built-in Good style.
             customStyle.CopyFrom(BuiltInStyleId.Good);
@@ -65,13 +109,13 @@ namespace Example_project
             customStyle.BeginUpdate();
             try
             {
-                customStyle.Font.Color = Color.DarkGray;
+                customStyle.Font.Color = Color.DimGray;
                 customStyle.Font.Size = 12;
 
                 // Align the cells to the right.
                 customStyle.Alignment.Horizontal = SpreadsheetHorizontalAlignment.Right;
 
-                customStyle.Fill.BackgroundColor = Color.LightBlue;
+                customStyle.Fill.BackgroundColor = _customColor;
             }
             finally
             {
@@ -86,12 +130,14 @@ namespace Example_project
         {
             Chart chart = _worksheet.Charts.Add(ChartType.ScatterLineMarkers);
             chart.Title.SetValue("Example chart with trendline");
-            chart.TopLeftCell = _worksheet.Cells["D1"];
-            chart.BottomRightCell = _worksheet.Cells["K14"];
-            chart.Series.Add(
-                ChartData.FromRange(_range),    // Convert the CellRange data to a ChartData format and use as Y axis data
-                new CellValue[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }   // Create X axis data
-                );
+            chart.TopLeftCell = _worksheet.Cells["E1"];
+            chart.BottomRightCell = _worksheet.Cells["L14"];
+            // Create X- axis data
+            CellValue[] xAxisData = Enumerable.Range(1, _range.RowCount).Select(i => (CellValue)i).ToArray();
+            // Create Y- axis data
+            // Use only the first range column for Y data
+            CellValue[] yAxisData = Enumerable.Range(0, _range.RowCount).Select(i => _range[i, 0].Value).ToArray();
+            chart.Series.Add(xAxisData, yAxisData);
             // Display the minor gridlines of the category axis.
             chart.PrimaryAxes[0].MinorGridlines.Visible = true;
             // Display the minor gridlines of the value axis.
@@ -102,16 +148,22 @@ namespace Example_project
             chart.Series[0].Trendlines.Add(ChartTrendlineType.Linear);
         }
 
-        // Save the workbook to file
-        public void SaveWorkbook()
+        // Save Date to cell
+        public void SaveDateTimeToCell()
         {
-            _workbook.SaveDocument($"{_fileName}.xlsx");
+            _dateCell.Value = _date;
+        }
+
+        // Save the workbook to file
+        async public Task SaveWorkbookAsync()
+        {
+            await _workbook.SaveDocumentAsync($"{_fileName}.xlsx");
         }
 
         // Export the workbook to a PDF file
-        public void ExportWorkbookToPDF()
+        async public Task ExportWorkbookToPDFAsync()
         {
-            _workbook.ExportToPdf($"{_fileName}.pdf");
+            await _workbook.ExportToPdfAsync($"{_fileName}.pdf");
         }
     }
 }
